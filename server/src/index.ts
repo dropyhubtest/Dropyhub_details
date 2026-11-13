@@ -74,12 +74,17 @@ app.use((err: any, _req: express.Request, res: express.Response, _next: express.
   });
 });
 
-app.listen(PORT, () => {
-  console.log(`
+if (!process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log(`
   🚀 DropyHub Partner API Server running!
   📡 Port: http://localhost:${PORT}
   🔒 Admin Auth: http://localhost:${PORT}/api/v1/auth/login
   📥 Public Intake: http://localhost:${PORT}/api/v1/public/apply
   📊 Admin Portal API: http://localhost:${PORT}/api/v1/admin/partners
-  `);
-});
+    `);
+  });
+}
+
+export default app;
+
