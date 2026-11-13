@@ -4,8 +4,8 @@ import { Lock, Mail, ArrowRight, AlertCircle } from 'lucide-react';
 
 export const LoginPage: React.FC = () => {
   const { login } = useAuth();
-  const [email, setEmail] = useState('master@dropyhub.com');
-  const [password, setPassword] = useState('masteR&26');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -76,7 +76,8 @@ export const LoginPage: React.FC = () => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="w-full dropy-input pl-10 pr-3.5 h-[46px] text-[13.5px] font-body text-white placeholder-[#666666]"
-                  placeholder="master@dropyhub.com"
+                  placeholder="name@dropyhub.com"
+                  autoComplete="off"
                 />
               </div>
             </div>

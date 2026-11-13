@@ -13,33 +13,25 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // Security and middleware
-app.use(helmet());
+app.use(helmet({ crossOriginResourcePolicy: { policy: "cross-origin" } }));
 app.use(cookieParser());
 app.use(express.json());
 
-// CORS configuration supporting DropyHub Website and Partners Admin Client
-const allowedOrigins = [
-  process.env.CLIENT_ORIGIN || 'http://localhost:5173',
-  process.env.WEBSITE_ORIGIN || 'http://localhost:3000',
-  'http://localhost:5173',
-  'http://localhost:3000',
-];
+// CORS configuration supporting DropyHub Website, Partners Admin Client, and Vercel Previews
+const corsOptions: cors.CorsOptions = {
+  origin: (origin, callback) => {
+    // Allow server-to-server / curl / same-origin (no origin) or any requested origin (reflect)
+    callback(null, true);
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PATCH', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
+  optionsSuccessStatus: 200,
+};
 
-app.use(
-  cors({
-    origin: (origin, callback) => {
-      // Allow requests with no origin (e.g. mobile apps, curl, server-to-server) or matching origins
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(null, true); // Permissive in dev mode to avoid blocking local testing
-      }
-    },
-    credentials: true,
-    methods: ['GET', 'POST', 'PATCH', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
-  })
-);
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
+
 
 // Healthcheck routes
 app.get('/', (_req, res) => {
